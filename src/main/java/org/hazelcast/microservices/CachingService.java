@@ -1,6 +1,6 @@
 package org.hazelcast.microservices;
 
-import javax.cache.annotation.CacheResult;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,7 +15,7 @@ public class CachingService {
     // No list put in the cache
     // https://github.com/spring-projects/spring-framework/issues/19777
 
-    @CacheResult(cacheName = "service")
+    @Cacheable("service")
     public Person getPerson(Long id) {
         return repo.findById(id).orElse(null);
     }

@@ -13,9 +13,6 @@ public class HazelcastDemo {
     @Bean
     public Config config() {
         var config = new Config("hazelcastInstance");
-        var cacheConfig = config.getCacheConfig("service");
-        cacheConfig.setManagementEnabled(true);
-        cacheConfig.setStatisticsEnabled(true);
         config.setProperty("jmx.enabled", "true");
         return config;
     }
