@@ -6,11 +6,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Cache(region = "database", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Person {
+public class Person implements Serializable {
 
     @Id
     @GeneratedValue
