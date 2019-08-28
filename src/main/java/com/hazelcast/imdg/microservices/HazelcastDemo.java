@@ -1,12 +1,13 @@
 package com.hazelcast.imdg.microservices;
 
-import com.hazelcast.config.CacheConfig;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.InMemoryFormat;
 import com.hazelcast.config.MapConfig;
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.spring.cache.HazelcastCacheManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 
@@ -27,13 +28,8 @@ public class HazelcastDemo {
     }
 
     @Bean
-    public JCacheManagerCustomizer customizer() {
-        return cacheManager -> {
-            var config = new CacheConfig<Long, Person>("service");
-            config.setKeyType(Long.class);
-            config.setValueType(Person.class);
-            cacheManager.createCache("service", config);
-        };
+    public CacheManager cacheManager(HazelcastInstance hazelcastInstance) {
+        return new HazelcastCacheManager(hazelcastInstance);
     }
 
     public static void main(String[] args) {
