@@ -14,6 +14,7 @@
     <properties>
         <java.version>14</java.version>
         <hazelcast.version>4.2</hazelcast.version>
+        <tomcat.version>9.0.45</tomcat.version>
     </properties>
     <dependencies>
         <dependency>
@@ -41,6 +42,17 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-tomcat9-sessionmanager</artifactId>
+            <version>2.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.hazelcast</groupId>
+                    <artifactId>tomcat-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <build>

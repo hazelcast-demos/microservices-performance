@@ -14,3 +14,6 @@ spring:
           region.factory_class: com.hazelcast.hibernate.HazelcastCacheRegionFactory
           hazelcast.instance_name: hazelcastInstance
       javax.persistence.sharedCache.mode: ENABLE_SELECTIVE
+tsm:
+  sticky: false
+  hazelcast.instance.name: hazelcastInstance
