@@ -3,10 +3,14 @@ package com.hazelcast.imdg.microservices;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.InMemoryFormat;
 import com.hazelcast.config.MapConfig;
+import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.session.HazelcastSessionManager;
 import com.hazelcast.spring.cache.HazelcastCacheManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -16,15 +20,29 @@ import org.springframework.context.annotation.Bean;
 public class HazelcastDemo {
 
     @Bean
-    public Config config() {
+    public HazelcastInstance hazelcastInstance() {
         var config = new Config("hazelcastInstance");
         var databaseConfig = new MapConfig("database");
         config.addMapConfig(databaseConfig);
         var serviceConfig = new MapConfig("service");
         serviceConfig.setInMemoryFormat(InMemoryFormat.OBJECT);
         config.addMapConfig(serviceConfig);
+        var sessionConfig = new MapConfig("empty_session_replication");
+        config.addMapConfig(sessionConfig);
         config.setProperty("jmx.enabled", "true");
-        return config;
+        return Hazelcast.getOrCreateHazelcastInstance(config);
+    }
+
+    @Bean
+    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> customizeTomcat(HazelcastInstance hazelcastInstance) {
+        return (factory) -> {
+            factory.addContextCustomizers(context -> {
+                var manager = new HazelcastSessionManager();
+                manager.setSticky(false);
+                manager.setHazelcastInstanceName("hazelcastInstance");
+                context.setManager(manager);
+            });
+        };
     }
 
     @Bean
