@@ -15,6 +15,8 @@ services:
       - 8081:8081
     environment:
       - server.port=8081
+    depends_on:
+      - management_center
   node2:
     container_name: node2
     image: hazelcast/microservices-performance:1.0
@@ -22,3 +24,10 @@ services:
       - 8082:8082
     environment:
       - server.port=8082
+    depends_on:
+      - management_center
+  management_center:
+    container_name: management_center
+    image: hazelcast/management-center:4.2021.03
+    ports:
+      - 8080:8080
