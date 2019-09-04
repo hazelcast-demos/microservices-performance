@@ -1,0 +1,24 @@
+version: '3'
+services:
+  load-balancer:
+    container_name: load-balancer
+    build: ./haproxy
+    ports:
+      - 80:80
+    depends_on:
+      - node1
+      - node2
+  node1:
+    container_name: node1
+    image: hazelcast/microservices-performance:1.0
+    ports:
+      - 8081:8081
+    environment:
+      - server.port=8081
+  node2:
+    container_name: node2
+    image: hazelcast/microservices-performance:1.0
+    ports:
+      - 8082:8082
+    environment:
+      - server.port=8082
